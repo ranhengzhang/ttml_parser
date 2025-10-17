@@ -107,8 +107,6 @@ class ASS:
             # have /[+-]?\d+/ ?
             if re.search(r"[+-]?\d+", update_details):
                 offset = int(re.search(r"[+-]?\d+", update_details).group())
-            else:
-                offset = 0
 
         if "Title" in self.script_info[1]:
             ttml_lyric.metas["musicName"] |= {s.strip() for s in re.split(r'[&,/]', self.script_info[1]["Title"]) if s}

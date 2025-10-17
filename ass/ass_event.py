@@ -60,7 +60,6 @@ class ASSEvent:
 
                 syl.start_time = start_time
                 syl.duration = duration
-                syl.end_time = start_time + duration
 
                 # inner effect
                 if r"\-" in tags:
@@ -76,7 +75,6 @@ class ASSEvent:
                         furi: ASSSyl = ASSSyl()
                         furi.start_time = start_time
                         furi.duration = duration
-                        furi.end_time = start_time + duration
                         furi.is_furi = True
                         furi.text = furi_text
                         line.syl[-1].append_furi(furi)
@@ -89,7 +87,6 @@ class ASSEvent:
             syl: ASSSyl = ASSSyl()
             syl.start_time = line.start_time
             syl.duration = line.duration
-            syl.end_time = line.end_time
             syl.text = self.Text
             line.syl.append(syl)
 
