@@ -52,7 +52,6 @@ class QRC:
                 ttml_lyric.lines[-1].bg_line = line
             else:
                 ttml_lyric.lines.append(line)
-                ttml_lyric.have_other |= line.is_other
 
         ttml_lyric.offset(offset)
 
