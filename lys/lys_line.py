@@ -20,10 +20,11 @@ class LYSLine:
         self.syl: list[LYSSyl] = list[LYSSyl]()
         self.is_bg: bool = False
         self.is_other: bool = False
+        self.trans: str | None = None
         self._parent: ReferenceType[LYS] | None = None
 
         self.parent = parent
-        self.role = int(content[:content.index(']')][1:])
+        self.role = int(content[1:content.index(']')])
         text = content[content.index(']')+1:]
         index_list: list[int] = [ite.end() for ite in re.finditer(r"\(\d+,\d+\)", text)]
         syl_list: list[str] = list(
@@ -59,6 +60,10 @@ class LYSLine:
     def parent(self, parent: 'LYS') -> None:
         self._parent: ReferenceType[LYS] = weakref.ref(parent)
 
+    @property
+    def start(self) -> int:
+        return self.syl[0].start
+
     def to_ttml_line(self) -> TTMLLine:
         line: TTMLLine = TTMLLine()
 
@@ -92,6 +97,8 @@ class LYSLine:
 
         line.begin = self.syl[0].start
         line.end = self.syl[-1].start + self.syl[-1].duration
+        if self.trans:
+            line.ts_line['zh-CN'] = self.trans
 
         if line.is_bg:
             line.syl[0].text = replace_leading_bracket(line.syl[0].text)

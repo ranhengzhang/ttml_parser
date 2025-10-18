@@ -1,6 +1,7 @@
 import re
 
 from lys.lys_line import LYSLine
+from trans.trans import Trans
 from ttml.ttml import TTML
 from ttml.ttml_line import TTMLLine
 
@@ -14,7 +15,7 @@ class LYS:
 
         lines: list[str] = list(filter(None, re.split(r"(?:\r?\n)", content.strip())))
 
-        checker = lambda x: re.match(r'\[.+?\:.+?\]', x.strip()) is not None
+        checker = lambda x: re.match(r'^\[.+?\:.+?\]$', x.strip()) is not None
         if any(checker(line) for line in lines):
             while not checker(lines[0]):
                 lines.pop(0)
@@ -28,8 +29,16 @@ class LYS:
     def __str__(self) -> str:
         return '\n'.join([f'[{meta[0]}: {meta[1]}]' for meta in self.metas]) + "\n\n" + '\n'.join([str(line) for line in self.lines])
 
+    def match_trans(self, trans: Trans) -> None:
+        self.metas.extend(trans.metas)
+        for trans_line in trans.lines:
+            for line in self.lines:
+                if not line.trans and line.start == trans_line.begin:
+                    line.trans = trans_line.text
+                    break
+
     def to_ttml(self) -> TTML:
-        lyric_ttml_lines: list[TTMLLine] = list[TTMLLine]()  # 初始化TTML行列表
+        lyric_ttml_lines: list[TTMLLine] = [line.to_ttml_line() for line in self.lines]
         ttml_lyric: TTML = TTML()  # 初始化TTML对象
 
         offset:int = int()
@@ -40,11 +49,11 @@ class LYS:
             if meta[0] != "offset":
                 ttml_lyric.metas[meta[0]].add(meta[1])
 
-        for line in self.lines:
+        for line in lyric_ttml_lines:
             if line.is_bg:
-                ttml_lyric.lines[-1].bg_line = line.to_ttml_line()
+                ttml_lyric.lines[-1].bg_line = line
             else:
-                ttml_lyric.lines.append(line.to_ttml_line())
+                ttml_lyric.lines.append(line)
                 ttml_lyric.have_other |= line.is_other
 
         ttml_lyric.offset(offset)
