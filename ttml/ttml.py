@@ -52,7 +52,7 @@ class TTML:
                     f'</body>')
         else:
             return (f'<body dur="{AudioTime.stringify(self.lines[-1].end, False, True, True)}">'
-                    f'<div begin="{AudioTime.stringify(self.lines[0].begin, False, True, True)}" end="{AudioTime.stringify(self.lines[-1].end, False, True, True)}">{[str(line) for line in self.lines]}</div>'
+                    f'<div begin="{AudioTime.stringify(self.lines[0].begin, False, True, True)}" end="{AudioTime.stringify(self.lines[-1].end, False, True, True)}">{"".join([str(line) for line in self.lines])}</div>'
                     f'</body>')
 
     def __str__(self) -> str:

@@ -5,8 +5,8 @@ from typing import AnyStr
 check_leading_space: re.Pattern[AnyStr] = re.compile(r'^\s+')
 check_trailing_space: re.Pattern[AnyStr] = re.compile(r'\s+$')
 
-replace_leading_bracket = lambda text: re.sub(r'^\(*', r'(', text)
-replace_trailing_bracket = lambda text: re.sub(r'\)*$', r')', text)
+replace_leading_bracket = lambda text: re.sub(r'^[(（]*', r'(', text)
+replace_trailing_bracket = lambda text: re.sub(r'[)）]*$', r')', text)
 
 def escape_xml_manual(text: str) -> str:
     """
